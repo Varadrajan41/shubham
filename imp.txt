@@ -1,0 +1,123 @@
+opne cmd: mongod
+-----
+opne another 
+cmd: mongo --> show dbs; --> useShubham(DBname) --> db.shubham.insert({email;"shubham@abc",password:"shubam@123"})
+
+------------------------------------------------------------------------------------------------------------------------------
+create folder exam and inside it 
+Create Webserver file and opne cmd over there
+npm init
+npm install express
+
+npm install mongoose
+npm install cros
+
+npm install path
+npm install body-parser
+
+-----------------------------------------(APP.JS)------------------------------------------------------------------------
+now opne vs code  anpe webserver folder and create aap.js in webserver
+and write below code in app.js
+*****
+var express=require("express");
+var app=express();
+var path=require("path");
+var mongoose=require("mongoose");
+var bodyparser=require("body-parser");
+var cors=require("cors");
+var router=require("./route/router");
+mongoose.promise=global.promise;
+
+const url="moggodb://0.0.0.0:27017/employee";
+
+mongoose.connect(url,{
+    connectTimeoutMS:1000
+},function(err,res){
+    if(err)
+    {
+        console.log("connection not establish");
+        console.log(err);
+    }
+    else{
+        console.log("connection is done with database");
+    }
+});
+
+app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({extended:false}));
+app.use(express.static(path.join(__dirname,"public")));
+
+app.use(cors('*'));
+app.use("/",router);
+app.listen(3000);
+console.log("server is listening at port number 3000");
+module.exports=app;
+
+*****
+
+
+----------------------------------------(ROUTE.JS)-------------------------------------------------------
+now create route floder in WebServer and create route.js file in route folder
+and write the below code in it
+******
+var express=require("express");
+var mongoose=require("mongoose");
+
+const {modelName}=require("mongoose");
+
+var router=express.Router();
+var schema=mongoose.schema;
+
+var empschema=new schema({id:String,name:String,salary:String});
+
+var Emp=mongoose.model('emp',empschema,'emp');
+
+//------------------
+router.get("/employee",function(req,res){
+    Emp.find().exec(function(err,data){
+        if(err)
+        {
+            res.status(500).send("data not found");
+        }
+        else{
+            console.log(data);
+            res.send(data);
+        }
+    })
+});
+
+//-------------(if needed for post)---------
+router.post("Login/:id",function(req,res){
+     Emp.findOne({id:req.body.id,function (err,data){
+         if(err){
+             console.log(err);
+             res.status(500).send("Wrong id");
+         }
+         else{
+            if( data.name===body.name){
+                res.send("Data found");
+            }
+         }
+     }
+         
+     })
+});
+//--------------
+module.exports=router;
+
+*****
+
+----------------------------------(REACT)---------------------------------------------------------------
+
+now create react folder outside the Webserver but inside the Exam Folder
+onpe cmd :
+
+npm install create-react-app -g
+create-react-app myapp
+
+cd myapp
+npmstart
+
+------------------------------end--*-*-*--*-*-*-*-*---------------------------------------------------------
+
+ 
